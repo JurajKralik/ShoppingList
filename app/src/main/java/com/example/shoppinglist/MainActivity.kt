@@ -6,10 +6,12 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -47,7 +49,6 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen() {
@@ -56,8 +57,8 @@ fun MainScreen() {
         topBar = {
             TopAppBar(title = { Text(text = "Shopping list") })
         },
-        content =  {
-        Input()
+        content =  { innerPadding ->
+            Input(innerPadding)
         }
     )
 }
@@ -66,13 +67,15 @@ fun MainScreen() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Input() {
+fun Input(padding : PaddingValues) {
     var itemName by remember { mutableStateOf("") }
     var amount by remember { mutableStateOf(0) }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(padding)
     ) {
         Text(text = "Add item to the shopping list")
         TextField(
@@ -88,6 +91,9 @@ fun Input() {
             ),
             placeholder = { Text(text = "Product name") }
         )
+        Button(onClick = { /*TODO*/ }) {
+            Text(text = "Add product")
+        }
     }
 }
 
