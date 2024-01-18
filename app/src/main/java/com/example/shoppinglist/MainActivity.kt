@@ -63,12 +63,13 @@ fun MainScreen() {
             TopAppBar(title = { Text(text = "Shopping list") })
         },
         content =  { innerPadding ->
-            Input(innerPadding)
+            Column {
+                Input(innerPadding)
+                ShoppingList()
+            }
         }
     )
 }
-
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -99,7 +100,6 @@ fun Input(padding : PaddingValues) {
         Button(onClick = { /*TODO*/ }) {
             Text(text = "Add product")
         }
-        ShoppingList()
     }
 }
 
