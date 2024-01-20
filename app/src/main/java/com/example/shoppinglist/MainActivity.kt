@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -23,6 +24,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,19 +37,22 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.example.shoppinglist.database.ShoppingItem
 import com.example.shoppinglist.ui.theme.ShoppingListTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            val viewModel by viewModels<ShoppingViewModel>()
+            val shoppingItems by viewModel.shoppingItems.collectAsState(initial = listOf())
             ShoppingListTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    MainScreen()
+                    MainScreen(shoppingItems)
                 }
             }
         }
@@ -56,7 +61,7 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen() {
+fun MainScreen(shoppingItems: List<ShoppingItem>) {
 
     Scaffold(
         topBar = {
@@ -65,7 +70,7 @@ fun MainScreen() {
         content =  { innerPadding ->
             Column {
                 Input(innerPadding)
-                ShoppingList()
+                ShoppingList(shoppingItems)
             }
         }
     )
@@ -105,11 +110,10 @@ fun Input(padding : PaddingValues) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ShoppingList(){
-    val tempList = listOf("egg", "chicken", "butter")
+fun ShoppingList(shoppingItems: List<ShoppingItem>){
     LazyColumn{
         items(
-            items = tempList
+            items = shoppingItems
         ){
             Card(
                 modifier = Modifier
@@ -118,7 +122,7 @@ fun ShoppingList(){
                 onClick = {}
             ){
                 Text(
-                    text = it,
+                    text = it.name,
                     modifier = Modifier.padding(12.dp),
                     textAlign = TextAlign.Center
                 )
@@ -131,6 +135,6 @@ fun ShoppingList(){
 @Composable
 fun GreetingPreview() {
     ShoppingListTheme {
-        MainScreen()
+        MainScreen(listOf())
     }
 }
