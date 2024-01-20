@@ -52,7 +52,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    MainScreen(shoppingItems)
+                    MainScreen(shoppingItems = shoppingItems, onAddItemClick = {shoppingItem -> viewModel.addShoppingItem(shoppingItem) })
                 }
             }
         }
@@ -61,7 +61,7 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(shoppingItems: List<ShoppingItem>) {
+fun MainScreen(shoppingItems: List<ShoppingItem>,onAddItemClick: (ShoppingItem) -> Unit) {
 
     Scaffold(
         topBar = {
@@ -69,7 +69,7 @@ fun MainScreen(shoppingItems: List<ShoppingItem>) {
         },
         content =  { innerPadding ->
             Column {
-                Input(innerPadding)
+                Input(onAddItemClick,innerPadding)
                 ShoppingList(shoppingItems)
             }
         }
@@ -78,7 +78,7 @@ fun MainScreen(shoppingItems: List<ShoppingItem>) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Input(padding : PaddingValues) {
+fun Input(onAddItemClick: (ShoppingItem) -> Unit, padding : PaddingValues) {
     var itemName by remember { mutableStateOf("") }
     var amount by remember { mutableStateOf(0) }
 
@@ -102,7 +102,7 @@ fun Input(padding : PaddingValues) {
             ),
             placeholder = { Text(text = "Product name") }
         )
-        Button(onClick = { /*TODO*/ }) {
+        Button(onClick = { onAddItemClick(ShoppingItem(itemName,amount)) }) {
             Text(text = "Add product")
         }
     }
@@ -135,6 +135,6 @@ fun ShoppingList(shoppingItems: List<ShoppingItem>){
 @Composable
 fun GreetingPreview() {
     ShoppingListTheme {
-        MainScreen(listOf())
+        MainScreen(listOf(), {})
     }
 }
