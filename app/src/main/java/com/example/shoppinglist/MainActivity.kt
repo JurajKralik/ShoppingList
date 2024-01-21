@@ -21,7 +21,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.rememberNavController
 import com.example.shoppinglist.database.ShoppingItem
+import com.example.shoppinglist.navigation.NavigationHost
 import com.example.shoppinglist.screens.MainScreen
 import com.example.shoppinglist.ui.theme.ShoppingListTheme
 
@@ -30,14 +32,15 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val viewModel by viewModels<ShoppingViewModel>()
-            val shoppingItems by viewModel.shoppingItems.collectAsState(initial = listOf())
+            val navHost = rememberNavController()
+
             ShoppingListTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    MainScreen(shoppingItems = shoppingItems, onAddItemClick = {shoppingItem -> viewModel.addShoppingItem(shoppingItem) })
+                    NavigationHost(navHost, viewModel)
                 }
             }
         }
@@ -46,33 +49,11 @@ class MainActivity : ComponentActivity() {
 
 
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun ShoppingList(shoppingItems: List<ShoppingItem>){
-    LazyColumn{
-        items(
-            items = shoppingItems
-        ){
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp),
-                onClick = {}
-            ){
-                Text(
-                    text = it.name,
-                    modifier = Modifier.padding(12.dp),
-                    textAlign = TextAlign.Center
-                )
-            }
-        }
-    }
-}
 
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
     ShoppingListTheme {
-        MainScreen(listOf(), {})
+        MainScreen(listOf(), {}, {})
     }
 }
