@@ -57,7 +57,9 @@ fun MainScreen(shoppingItems: List<ShoppingItem>, onAddItemClick: (ShoppingItem)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Input(onAddItemClick: (ShoppingItem) -> Unit, padding : PaddingValues) {
-    var itemName by remember { mutableStateOf("") }
+    var uom by remember { mutableStateOf("Pieces") }
+    var note by remember { mutableStateOf("") }
+    var itemName by remember { mutableStateOf("Product") }
     var amount by remember { mutableStateOf(0) }
 
     Column(
@@ -77,10 +79,19 @@ fun Input(onAddItemClick: (ShoppingItem) -> Unit, padding : PaddingValues) {
             onValueChange = { amount = if(it.isBlank()) 0 else it.toInt()},
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Number
-            ),
-            placeholder = { Text(text = "Product name") }
+            )
         )
-        Button(onClick = { onAddItemClick(ShoppingItem(itemName,amount)) }) {
+        TextField(
+            value = uom,
+            onValueChange = { uom = it },
+            placeholder = { Text(text = "Pieces") }
+        )
+        TextField(
+            value = note,
+            onValueChange = { note = it },
+            placeholder = { Text(text = "Note") }
+        )
+        Button(onClick = { onAddItemClick(ShoppingItem(itemName,amount,uom,note)) }) {
             Text(text = "Add product")
         }
     }
@@ -103,7 +114,7 @@ fun ShoppingList(
                 onClick = {onItemClick(it.id.toString())}
             ){
                 Text(
-                    text = it.name,
+                    text = it.name + ": "+ it.amount + " "+ it.uom,
                     modifier = Modifier.padding(12.dp),
                     textAlign = TextAlign.Center
                 )

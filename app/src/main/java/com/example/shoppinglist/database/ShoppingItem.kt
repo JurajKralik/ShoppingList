@@ -7,5 +7,7 @@ import androidx.room.PrimaryKey
 data class ShoppingItem(
     val name:String,
     val amount: Int,
+    val uom: String = "Pieces",
+    val note: String = "",
     @PrimaryKey(autoGenerate = true)val id: Int = 0
 )

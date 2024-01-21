@@ -33,5 +33,11 @@ class ShoppingViewModel(application: Application): AndroidViewModel(application)
         }
     }
 
-
+    fun deleteUser(shoppingItem: ShoppingItem){
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                shoppingRepository.deleteItem(shoppingItem)
+            }
+        }
+    }
 }

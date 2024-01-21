@@ -18,4 +18,8 @@ class ShoppingRepository(private val database: AppDatabase) {
     suspend fun getItemFromId(id:Int): ShoppingItem{
         return database.shoppingDao().getItem(id)
     }
+
+    suspend fun deleteItem(shoppingItem: ShoppingItem){
+        database.shoppingDao().deleteItem(shoppingItem)
+    }
 }
